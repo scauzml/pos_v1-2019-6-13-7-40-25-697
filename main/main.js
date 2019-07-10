@@ -1,6 +1,7 @@
 'use strict';
 
 function printReceipt(inputs) {
+   
   let orderArray=getAllOrder(inputs);
   let receipt=createReceipt(orderArray);
   console.log(receipt);
@@ -17,36 +18,35 @@ function countNumOfItem(inputs){
   var itemMap=new Map();
   let helpArray=[];
   let keyNum=0;
-   
   inputs.forEach((item, index, array) => {
+    if(item.includes("-")){
+        let arrayItem=item.split("-");
+        item=arrayItem[0];
+    }
     if(!helpArray.includes(item)){
+       
       let count=0;
-      if(item.includes("-")){
-          let value=item.split("-");
-          item=value[0];
-          
-          inputs.forEach((item1,index,array)=>{
-             if(item1.includes(item)){
-                 let item1Value=item1.split("-");
-                 count+=Number.parseFloat(item1Value[1]);
-             }
-          });
-      }else{
+       
         inputs.forEach((item1, index, array)=>{
-            if(item1.includes("-")){
+            if(item1.includes('-')){
+             let value=item1.split("-");
 
-            }else{
+             if(item==value[0]){
+                 count+=Number.parseFloat(value[1]);
                 
+             }
+            
+            }else{
+                if(item==item1){
+                    count++;
+                  }
+                  
             }
-            if(item==item1){
-              count++;
-            }
+           
       });
-      }
-      
-      helpArray.push(item);
-      itemMap.set(keyNum,item+":"+count);
-      console.log(item+":"+count)
+     
+        helpArray.push(item);
+        itemMap.set(keyNum,item+":"+count);
       keyNum++;
     }
   });
@@ -80,7 +80,7 @@ function getAllOrder(inputs){
     }
     let item=null;
      allItems.forEach((it,index,array)=>{
-      if(itemId==it.barcode){
+      if(itemId == it.barcode){
         item=it;
       }
      });
@@ -88,8 +88,8 @@ function getAllOrder(inputs){
      order.item=item;
      order.number=count;
      order.promotionCount=promotionCount;
-     order.promotionMoney=(item.price*promotionCount).toFixed(2)
-     order.totalMOney=(item.price*(Number.parseInt(count)-promotionCount)).toFixed(2);
+     order.promotionMoney=(item.price* promotionCount).toFixed(2);
+     order.totalMOney=(item.price*(Number.parseFloat(count)-promotionCount)).toFixed(2);
      orderArray.push(order);
  }
 
